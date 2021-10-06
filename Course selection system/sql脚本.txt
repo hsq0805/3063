@@ -1,0 +1,409 @@
+DROP DATABASE CourseSelection; 
+CREATE DATABASE CourseSelection; 
+USE CourseSelection; 
+
+/*（1）dept院系信息表*/
+CREATE TABLE dept(
+	DeptNum char(10) NOT NULL PRIMARY KEY,
+	DeptName varchar(20) NOT NULL,
+	DeptChairman varchar(10) NOT NULL,
+	DeptTel varchar(20) NOT NULL
+);
+
+/*（2）tb_major专业信息表*/
+CREATE TABLE major(
+	MajorNum char(10) NOT NULL PRIMARY KEY,
+	DeptNum char(10) NOT NULL,
+	MajorName varchar(20) NOT NULL,
+	MajorAssistant varchar(10) NOT NULL,
+	MajorTel varchar(20) NOT NULL,
+	FOREIGN KEY (DeptNum) REFERENCES dept(DeptNum)
+);
+
+/*（3）teacher教师信息表*/
+CREATE TABLE teacher(
+	TeacherNum char(10) NOT NULL PRIMARY KEY,
+	MajorNum char(10) NOT NULL,
+	TeacherName varchar(10) NOT NULL,
+	TeacherSex char(2) NOT NULL,
+	TeacherBirthday varchar(20) NOT NULL,
+	TeacherTitle varchar(20) not NULL,
+	FOREIGN KEY (MajorNum) REFERENCES major(MajorNum)
+);
+
+
+/*（4）student学生信息表*/
+CREATE TABLE student(
+	StudentNum char(10) NOT NULL PRIMARY KEY,
+	MajorNum char(10) NOT NULL,
+	StudentName varchar(10) NULL,
+	StudentSex char(2) NOT NULL,
+	StudentBirthday varchar(20) NOT NULL,
+	FOREIGN KEY (MajorNum) REFERENCES major(MajorNum)
+);
+
+/*（5）course课程信息表*/
+CREATE TABLE course(
+    CourseNum char(10) NOT NULL PRIMARY KEY,
+	CourseName varchar(20) NOT NULL,
+	CourseCredit int NOT NULL,
+	CourseClass int NOT NULL,
+    MajorNum  char(10) NOT NULL,
+    FOREIGN KEY (MajorNum) REFERENCES major(MajorNum)
+);
+
+/* （6）课段信息表 */
+CREATE TABLE section(
+    SecID char(10) NOT NULL,
+    StudentSum int,
+    TeacherNum char(10),
+    CourseNum  char(10),
+    primary key (SecID),
+    FOREIGN KEY (TeacherNum) REFERENCES teacher(TeacherNum),
+	FOREIGN KEY (CourseNum) REFERENCES course(CourseNum)
+);
+
+/*（7）stucourse学生选课信息表*/
+CREATE TABLE stucourse(
+	StudentNum char(10) NOT NULL,
+	SecID char(10) NOT NULL,
+	Grade numeric(4,2) ,
+    primary key (StudentNum,SecID),
+	FOREIGN KEY (StudentNum) REFERENCES student(StudentNum),
+	FOREIGN KEY (SecID) REFERENCES section(SecID)
+);
+
+ /*（8）userpass用户登录信息表*/
+ CREATE TABLE userpass(
+    username varchar(10) NOT NULL,
+    userpass varchar(20) NOT NULL,
+     primary key (username)
+    );
+    
+ /*用户登录信息*/
+insert into userpass values('190502001s ','123456');
+insert into userpass values('190502002s ' ,'123456');
+insert into userpass values('0502001Tea ' ,'123456');
+insert into userpass values('0502002Tea ' ,'123456');
+
+/*学院信息*/
+insert into dept values('0502','语言文化学院','张欣','13624576856');
+insert into dept values('0201' ,'国际经济贸易学院','张建武','1385627954');
+insert into dept values('1102' ,'国际工商管理学院','朱文忠','19852766354');
+insert into dept values('0501' ,'中国语言文化学院','陈彦辉','18526447821');
+insert into dept values('0301' ,'法学院','陈云良','13544827561');
+insert into dept values('0401' ,'英语教育学院','董金伟','15467881454');
+insert into dept values('0806' ,'信息科学技术学院','蒋盛益','19855476354');
+insert into dept values('1103' ,'政治与公共管理学院','彭未名','17544869348');
+insert into dept values('0503' ,'新闻传播学院','侯迎忠','19865772459');
+insert into dept values('0504' ,'艺术学院','李志刚','19856755125');
+
+/*专业信息*/
+insert  into major values('020101', '0201','经济学','张建武','1385627954');
+insert  into major values('020102', '0201','国际经济与贸易','张建武','1385627954');
+insert  into major values('020103', '0201','财政学','张建武','1385627954');
+insert  into major values('020104', '0201','金融学','张建武','1385627954');
+insert  into major values('020107w', '0201','保险','张建武','1385627954');
+insert  into major values('020109w', '0201','金融工程','张建武','1385627954');
+insert  into major values('020110w', '0201','税务','张建武','1385627954');
+insert into major values('050201','0502','英语','张欣','13624576856');
+insert into major values('050249S','0502','商务英语','张欣','13624576856');
+insert into major values('050204*','0502','法语','张欣','13624576856');
+insert into major values('050203','0502','德语','张欣','13624576856');
+insert into major values('050202','0502','俄语','张欣','13624576856');
+insert into major values('050205','0502','西班牙语','张欣','13624576856');
+insert into major values('050237','0502','意大利语','张欣','13624576856');
+insert into major values('050231*','0502','葡萄牙语','张欣','13624576856');
+insert into major values('050207','0502','日语','张欣','13624576856');
+insert into major values('050212△','0502','印度尼西亚语','张欣','13624576856');
+insert into major values('110211W','1102','国际商务','朱文忠','19852766354');
+insert into major values('110201','1102','工商管理','朱文忠','19852766354');
+insert into major values('110202','1102','市场营销','朱文忠','19852766354');
+insert into major values('110205','1102','人力资源管理','朱文忠','19852766354');
+insert into major values('110210W','1102','物流管理','朱文忠','19852766354');
+insert into major values('110209W','1102','电子商务','朱文忠','19852766354');
+insert into major values('110203','1102','会计学','朱文忠','19852766354');
+insert into major values('110204','1102','财务管理','朱文忠','19852766354');
+insert into major values('110208W','1102','审计学','朱文忠','19852766354');
+insert into major values('050102' ,'0501','汉语言','陈彦辉','18526447821');
+insert into major values('030101' ,'0301','法学','陈云良','13544827561');
+insert into major values('030402' ,'0301','国际政治','陈云良','13544827561');
+insert into major values('030403' ,'0301','外交学','陈云良','13544827561');
+insert into major values('040101' ,'0401','教育学','董金伟','15467881454');
+insert into major values('080605' ,'0806','计算机科学与技术','蒋盛益','19855476354');
+insert into major values('080611W' ,'0806','软件工程','蒋盛益','19855476354');
+insert into major values('071601' ,'0806','统计学','蒋盛益','19855476354');
+insert into major values('070101' ,'0806','数学与应用数学','蒋盛益','19855476354');
+insert into major values('110102' ,'0806','信息管理与信息系统','蒋盛益','19855476354');
+insert into major values('080613W' ,'0806','网络工程','蒋盛益','19855476354');
+insert into major values('110302' ,'1103','公共事业管理','彭未名','17544869348');
+insert into major values('050301' ,'0503','新闻学','侯迎忠','19865772459');
+insert into major values('050303' ,'0503','广告学','侯迎忠','19865772459');
+insert into major values('050419*' ,'0504','播音与主持艺术','李志刚','19856755125');
+insert into major values('050403' ,'0504','音乐表演','李志刚','19856755125');
+insert into major values('050408' ,'0504','艺术设计','李志刚','19856755125');
+insert into major values('050401' ,'0504','音乐学','李志刚','19856755125');
+insert into major values('050409' ,'0504','舞蹈学','李志刚','19856755125');
+
+/*老师信息*/
+insert into teacher values ( '0502001Tea ', '050201','张欣', '女','1990年10月30日','教授');
+insert into teacher values ( '0502002Tea ', '050202','张建武', '女','1991年12月10日','副教授');
+insert into teacher values ( '0502003Tea ', '050203','张琪', '女','1992年10月15日','副教授');
+insert into teacher values ( '0502004Tea ', '050205','郑欣', '女','1980年1月10日','讲师');
+insert into teacher values ( '0502005Tea ', '110201','苏倩', '女','1981年11月11日','教授');
+insert into teacher values ( '0502006Tea ', '050201','庞钰', '女','1982年8月23日','讲师');
+insert into teacher values ( '0502007Tea ', '050202','朱丹', '女','1983年7月12日','教授');
+insert into teacher values ( '0502008Tea ', '050203','高雯', '女','1987年8月16日','副教授');
+insert into teacher values ( '0502009Tea ', '050205','宋伟', '女','1990年4月15日','副教授');
+insert into teacher values ( '0502010Tea ', '050201','黄亮', '女','1990年3月10日','教授');
+
+/*课程信息*/
+insert into Course values('0502001','英语',3,48,'050201');
+insert into Course values('0502002','俄语',4,60,'050202');
+insert into Course values('0502003','法语',2,32,'050203');
+insert into Course values('0502005','西班牙语',3,48,'050205');
+insert into Course values('0502007','印度尼西亚语',3,48,'050207');
+insert into Course values('0201001','经济学',4,60,'020101');
+insert into Course values('0201002','国际经济与贸易',4,60,'020102');
+insert into Course values('0201003','财政学',2,32,'020103');
+insert into Course values('0201004','保险',4,60,'020104');
+insert into Course values('0501002','汉语言应用',4,60,'050102');
+insert into Course values('0301001','法律基础',3,48,'030101');
+insert into Course values('0401001','英语阅读',3,48,'040101');
+insert into Course values('1103001','应用心理学',2,32,'110201');
+insert into Course values('1103002','社会心理学',4,60,'110202');
+insert into Course values('1103003','管理学原理',4,60,'110203');
+insert into Course values('0503001','播音发声学',2,32,'050301');
+insert into Course values('0503002','主持能力训练',4,60,'050301');
+insert into Course values('0503003','英语播音基础',3,48,'050301');
+insert into Course values('0503004','即兴口语表达',3,48,'050301');
+insert into Course values('0503005','影像与视觉传播',3,48,'050301');
+insert into Course values('0503006','传播学概论',2,32,'050301');
+insert into Course values('0503007','广告经营与管理',4,60,'050301');
+insert into Course values('0504001','基础乐理',4,60,'050403');
+insert into Course values('0504002','视唱练耳',3,48,'050403');
+insert into Course values('0504003','音乐构成',3,48,'050403');
+insert into Course values('0504004','艺术鉴赏与评论',2,32,'050403');
+insert into Course values('0504005','表演',4,60,'050403');
+insert into Course values('0504006','声乐',2,32,'050403');
+insert into Course values('0504007','钢琴教学法',3,48,'050403');
+insert into Course values('0504008','钢琴演奏',4,60,'050403');
+insert into Course values('0504009','中国音乐史',2,32,'050403');
+
+/*学生信息*/
+insert into student values ( '190502001s ', '050201','李明', '男','2000年1月10日');
+insert into student values ( '190502002s ', '050201','张三', '女','1999年10月11日');
+insert into student values ( '190502003s ', '050201','张勇', '男','2000年2月10日');
+insert into student values ( '190502004s ', '050201','李四', '男','2000年3月10日');
+insert into student values ( '190502005s ', '050201','李永', '男','1999年9月17日');
+insert into student values ( '190502006s ', '050201','陈红', '女','1999年8月10日');
+insert into student values ( '190502007s ', '050201','苏茜', '女','2001年6月12日');
+insert into student values ( '190502008s ', '050201','张恒', '男','2000年4月20日');
+insert into student values ( '190502009s ', '050201','黄芷', '女','2001年2月10日');
+insert into student values ( '190502010s ', '050201','苏珊', '女','2000年8月30日');
+insert into student values ( '190502011s ', '050201','李丹', '女','2001年7月14日');
+insert into student values ( '190502012s ', '050201','陈刚', '男','2000年4月16日');
+insert into student values ( '190502013s ', '050201','陈浩', '男','2000年4月11日');
+
+/*课段信息*/
+insert into section values('050201sect',48, '0502001Tea ','0502001');
+insert into section values('050202sect',60,'0502001Tea ','0502002');
+insert into section values('050203sect',32,'0502001Tea ','0502003');
+insert into section values('050205sect',48,'0502001Tea ','0502005');
+insert into section values('050207sect',48,'0502001Tea ','0502007');
+insert into section values('020101sect',60,'0502002Tea ','0201001');
+insert into section values('020102sect',60,'0502002Tea ','0201002');
+insert into section values('020103sect',32,'0502002Tea ','0201003');
+insert into section values('020104sect',60,'0502002Tea ','0201004');
+insert into section values('050102sect',60,'0502002Tea ','0501002');
+insert into section values('030101sect',48,'0502002Tea ','0301001');
+insert into section values('040101sect',48,'0502003Tea ','0401001');
+insert into section values('110201sect',32,'0502003Tea ','1103001');
+insert into section values('110202sect',60,'0502003Tea ','1103002');
+insert into section values('110203sect',60,'0502003Tea ','1103003');
+insert into section values('050301sect',32,'0502003Tea ','0503001');
+insert into section values('050302sect',60,'0502004Tea ','0503002');
+insert into section values('050303sect',48,'0502004Tea ','0503003');
+insert into section values('050304sect',48,'0502004Tea ','0503004');
+insert into section values('050305sect',48,'0502004Tea ','0503005');
+insert into section values('050306sect',32,'0502004Tea ','0503006');
+insert into section values('050307sect',60,'0502005Tea ','0503007');
+insert into section values('050401sect',60,'0502005Tea ','0504001');
+insert into section values('050402sect',48,'0502005Tea ','0504002');
+insert into section values('050403sect',48,'0502006Tea ','0504003');
+insert into section values('050404sect',32,'0502006Tea ','0504004');
+insert into section values('050405sect',60,'0502006Tea ','0504005');
+insert into section values('050406sect',32,'0502007Tea ','0504006');
+insert into section values('050407sect',48,'0502007Tea ','0504007');
+insert into section values('050408sect',60,'0502007Tea ','0504008');
+insert into section values('050409sect',32,'0502007Tea ','0504009');
+
+insert into stucourse values('190502001s ','050201sect',95);
+insert into stucourse values('190502001s ','050202sect',92);
+insert into stucourse values('190502001s ','050203sect',90);
+
+
+ /*-- 创建学生成绩视图 --*/
+CREATE VIEW vi_grade
+AS
+SELECT stucourse.StudentNum,student.StudentName,section.SecID,course.CourseNum,course.CourseName 
+		,course.CourseCredit,Grade
+FROM stucourse, student, course, section
+WHERE stucourse.SecID=Section.SecID and stucourse.StudentNum=student.StudentNum and course.CourseNum=section.CourseNum and grade IS NOT NULL;
+
+/*-- 创建课段信息视图--*/
+CREATE VIEW vi_section
+AS
+select SecID,CourseName,CourseCredit,TeacherName,StudentSum
+from section,course,teacher
+where section.CourseNum = course.CourseNum and section.TeacherNum = teacher.TeacherNum;
+
+      
+/*-- 创建学生信息视图 --*/
+CREATE VIEW vi_major
+AS
+SELECT major.MajorName,student.*
+FROM major,student
+WHERE major.MajorNum = student.MajorNum;
+
+/*-- 创建学生总成绩视图*/
+CREATE VIEW vi_stuTotalGrade
+AS
+SELECT StudentNum,StudentName,sum(Grade) as totalGrade,sum(Coursecredit) AS totalCredit
+FROM vi_grade
+GROUP BY StudentNum;
+
+/*2、创建触发器退课*/
+/*-- 课程人数自动减1 --*/
+delimiter //
+CREATE TRIGGER tri_takecourse1 AFTER delete ON stucourse FOR EACH ROW
+BEGIN
+declare msg char(20) character set utf8mb4;
+UPDATE section
+SET section.StudentSum = section.StudentSum +1
+WHERE section.SecID = OLD.SecID;
+set msg="退课成功";
+END //
+
+/*2、创建触发器选课*/
+/*-- 课程人数自动加1 --*/
+delimiter //
+CREATE TRIGGER tri_takecourse2 AFTER insert ON stucourse FOR EACH ROW
+BEGIN
+declare msg char(20) character set utf8mb4;
+IF(SELECT COUNT(*) FROM stucourse
+	WHERE stucourse.SecID=NEW.SecID )<=40 THEN
+UPDATE section
+SET section.StudentSum = section.StudentSum -1
+WHERE section.SecID = NEW.SecID;
+set msg="选课成功";
+else
+set msg="选课失败";
+END IF;
+END //
+
+delimiter //
+/*-- 创建过程，填写学生成绩*/
+create procedure insert_grade(in secno char(10), in sno char(10) , in grade numeric(4,2))
+       begin
+       update stucourse
+       set stucourse.grade = grade
+       where stucourse.SecID = secno and stucourse.StudentNum = sno;
+       end;
+//
+
+delimiter //
+/*-- 创建过程,查询所有学生的选课记录*/
+create procedure proc_getcourse()
+       begin
+    select student.StudentNum,
+     student.StudentName,
+      course.CourseName,
+     course.CourseCredit,
+     teacher.TeacherName
+    from stucourse,course,student,section,teacher
+    where stucourse.StudentNum = student.StudentNum and 
+   stucourse.SecID = section.SecID;
+  end
+//
+
+delimiter //
+/*-- 创建过程,查询指定教师所有课程的选课记录,输出教师所教的课程信息和该课程的选课人数*/
+create procedure proc_getTeacherCourse(in TeacherNum char(10))
+       begin
+       select teacher.TeacherName,section.SecID,course.CourseName,
+       count(stucourse.StudentNum) as number
+    from stucourse,course,teacher,section
+    where  stucourse.SecID = section.SecID and 
+   section.TeacherNum = teacher.TeacherNum and 
+   teacher.TeacherNum = TeacherNum
+ group  by stucourse.SecID;
+ end
+  //
+
+delimiter //
+/*-- 创建过程,学生选课*/
+create procedure takeCourse(in secno char(10), in sno char(10) )
+       begin
+         insert into stucourse
+         value (sno,secno,null);
+       end
+//
+
+delimiter //
+/*-- 创建过程,学生退课*/
+create procedure dropCourse(in secno char(10), in sno char(10) )
+       begin
+         delete stucourse.*
+         from stucourse
+         where SecID = secno and StudentNum = sno;
+       end
+//
+
+delimiter //
+/*-- 创建过程,查询指定学生所有课程的选课记录*/
+create procedure proc_getStudentCourse(in StudentNum char(10))
+       begin
+       select stucourse.SecID,CourseName,CourseCredit,TeacherName
+    from stucourse,vi_section
+    where stucourse.StudentNum = StudentNum and 
+          stucourse.SecID = vi_section.SecID;
+  end;
+//
+
+delimiter //
+/*-- 创建过程,学生查询自己成绩*/
+create procedure QueryStuGrade(in sno char(10))
+       begin
+        select  vi_grade.CourseName,
+                    vi_grade.Grade
+        from vi_grade
+        where vi_grade.StudentNum = sno;
+       end;
+//
+
+delimiter //
+/*-- 创建过程,老师查询自己所教的课程的学生成绩*/
+create procedure QueryCourseGrade(in secno char(10))
+       begin
+        select  vi_grade.CourseName,
+                 vi_grade.StudentNum,
+                 vi_grade.StudentName,
+                    vi_grade.Grade
+        from vi_grade
+        where vi_grade.SecID= secno;
+       end;
+//
+
+delimiter //
+create procedure proc_getRemainCourse(in StudentNum char(10))
+       begin
+       select *
+    from vi_section
+    where SecID not in
+          (select stucourse.SecID
+          from stuCourse
+          where stuCourse.StudentNum = StudentNum
+          );
+     end;
+//
